@@ -121,6 +121,7 @@ export default {
       listVisible: false, //音乐列表是否显示
       volume: 0, //音量
       isVolumeDown: false,
+      timer: '',
     }
   },
   props: {
@@ -176,9 +177,16 @@ export default {
   mounted() {
     this.volume = this.$refs.music.volume
     this.$refs.volume_bar_inner.style.width = `${this.volume * 100}%`
-    setInterval(this.listenMusic, 100)
+    this.timer = setInterval(this.listenMusic, 100)
     window.addEventListener('mousemove', this.mouseMove)
     window.addEventListener('mouseup', this.mouseUp)
+  },
+  destroyed() {
+    // 清除定时器和监听事件
+    clearInterval(this.timer)
+    this.timer = null
+    window.removeEventListener('mousemove', this.mouseMove)
+    window.removeEventListener('mouseup', this.mouseUp)
   },
   methods: {
     // 切换音乐
